@@ -1,0 +1,65 @@
+version: '3.8'
+
+#services:
+#  db:
+#    image: mysql:8.0
+#    container_name: mysql_container
+#    ports:
+#      - "${DB_PORT}:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+#      MYSQL_DATABASE: ${DB_NAME}
+#      MYSQL_USER: ${DB_USER}
+#      MYSQL_PASSWORD: ${DB_PASS}
+#    volumes:
+#      - ./:/var/lib/mysql
+#  api:
+#    build: .
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - db
+#    links:
+#      - db
+
+
+services:
+#  db:
+#    image: mysql:8.0
+#    container_name: mysql
+#    ports:
+#      - "3308:3306"
+#    environment:
+#      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+#      MYSQL_DATABASE: ${DB_NAME}
+#      MYSQL_USER: ${DB_USER}
+#      MYSQL_ALLOW_PUBLIC_KEY_RETRIEVAL: "true"
+#    volumes:
+#      - mysql_data:/var/lib/mysql
+  db:
+    image: postgres:17
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/build
+      - .env:/build/.env
+    depends_on:
+      - db
+
+
+volumes:
+  postgres_data:
