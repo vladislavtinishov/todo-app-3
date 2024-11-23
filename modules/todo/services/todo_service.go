@@ -2,6 +2,7 @@ package todoservices
 
 import (
 	"gorm.io/gorm"
+	"strings"
 	todomodels "todo_app_3/modules/todo/models"
 )
 
@@ -31,13 +32,27 @@ func (s *TodoService) Find(id, userId uint) (todomodels.Todo, error) {
 	return todo, nil
 }
 
-func (s *TodoService) GetAll(userId uint) ([]todomodels.Todo, error) {
+func (s *TodoService) GetAll(userId uint, filter todomodels.Search) ([]todomodels.Todo, error) {
 	var todos []todomodels.Todo
 
 	query := s.db.Model(&todomodels.Todo{})
 	query = query.Preload("User")
 
-	result := query.Where("parent_id is null AND user_id = ?", userId).Find(&todos)
+	query = query.Where("parent_id is null AND user_id = ?", userId)
+
+	if title := filter.Title; title != "" {
+		query = query.Where("lower(title) like ?", "%"+strings.ToLower(title)+"%")
+	}
+
+	if description := filter.Description; description != "" {
+		query = query.Where("lower(description) like ?", "%"+strings.ToLower(description)+"%")
+	}
+
+	if statusId := filter.StatusID; statusId > 0 {
+		query = query.Where("status_id = ?", statusId)
+	}
+
+	result := query.Find(&todos)
 
 	return todos, result.Error
 }

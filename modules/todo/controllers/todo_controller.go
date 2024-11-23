@@ -26,7 +26,13 @@ func (td *TodoController) Index(c *gin.Context) {
 		return
 	}
 
-	todos, err := td.service.GetAll(userId)
+	var filter todomodels.Search
+
+	if err := c.Bind(&filter); err != nil {
+		return
+	}
+
+	todos, err := td.service.GetAll(userId, filter)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
