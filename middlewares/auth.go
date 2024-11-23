@@ -1,16 +1,15 @@
 package middlewares
 
 import (
-	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
+	"todo_app_3/config"
 	"todo_app_3/utils"
 )
 
 const (
 	authHeader = "Authorization"
-	userCtx    = "userId"
 )
 
 func Authenticated(c *gin.Context) {
@@ -36,23 +35,5 @@ func Authenticated(c *gin.Context) {
 
 	userId := claims.UserId
 
-	c.Set(userCtx, userId)
-}
-
-func GetUserId(c *gin.Context) (uint, error) {
-	id, ok := c.Get(userCtx)
-
-	if !ok {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "user id not found")
-		return 0, errors.New("user id not found")
-	}
-
-	idInt, ok := id.(uint)
-
-	if !ok {
-		utils.ErrorResponse(c, http.StatusInternalServerError, "user is of invalid type")
-		return 0, errors.New("user is of invalid type")
-	}
-
-	return idInt, nil
+	c.Set(config.USER_CTX, userId)
 }
