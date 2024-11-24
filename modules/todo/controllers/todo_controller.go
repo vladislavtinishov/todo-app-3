@@ -32,15 +32,19 @@ func (td *TodoController) Index(c *gin.Context) {
 		return
 	}
 
-	todos, err := td.service.GetAll(userId, filter)
+	var pagination utils.Pagination
+
+	if err := c.Bind(&pagination); err != nil {
+		return
+	}
+
+	todos, err := td.service.GetAll(userId, filter, &pagination)
 	if err != nil {
 		utils.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"todos": todos,
-	})
+	utils.SuccessListResponse(c, todos, pagination)
 }
 
 func (td *TodoController) Create(c *gin.Context) {

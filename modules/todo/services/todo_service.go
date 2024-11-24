@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 	"strings"
 	todomodels "todo_app_3/modules/todo/models"
+	"todo_app_3/utils"
 )
 
 type TodoService struct {
@@ -32,7 +33,7 @@ func (s *TodoService) Find(id, userId uint) (todomodels.Todo, error) {
 	return todo, nil
 }
 
-func (s *TodoService) GetAll(userId uint, filter todomodels.Search) ([]todomodels.Todo, error) {
+func (s *TodoService) GetAll(userId uint, filter todomodels.Search, pagination *utils.Pagination) ([]todomodels.Todo, error) {
 	var todos []todomodels.Todo
 
 	query := s.db.Model(&todomodels.Todo{})
@@ -50,6 +51,12 @@ func (s *TodoService) GetAll(userId uint, filter todomodels.Search) ([]todomodel
 
 	if statusId := filter.StatusID; statusId > 0 {
 		query = query.Where("status_id = ?", statusId)
+	}
+
+	query, err := pagination.Apply(query)
+
+	if err != nil {
+		return []todomodels.Todo{}, err
 	}
 
 	result := query.Find(&todos)
