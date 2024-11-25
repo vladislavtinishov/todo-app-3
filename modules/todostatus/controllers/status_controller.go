@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
+	"todo_app_3/common/utils"
 	todostatusmodels "todo_app_3/modules/todostatus/models"
 	todostatusservices "todo_app_3/modules/todostatus/services"
-	"todo_app_3/utils"
 )
 
 type TodoStatusController struct {

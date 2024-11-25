@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
+	"todo_app_3/common/utils"
 	"todo_app_3/config"
-	"todo_app_3/utils"
 )
 
 const (

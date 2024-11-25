@@ -3,8 +3,8 @@ package todoservices
 import (
 	"gorm.io/gorm"
 	"strings"
+	"todo_app_3/common/utils"
 	todomodels "todo_app_3/modules/todo/models"
-	"todo_app_3/utils"
 )
 
 type TodoService struct {
