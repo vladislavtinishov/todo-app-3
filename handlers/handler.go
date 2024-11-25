@@ -28,17 +28,23 @@ func NewHandler(db *gorm.DB) *gin.Engine {
 
 	authenticated := r.Group("/", middlewares.Authenticated)
 	{
-		authenticated.GET("/todos", todoController.Index)
-		authenticated.GET("/todos/:id", todoController.Show)
-		authenticated.POST("/todos", todoController.Create)
-		authenticated.PUT("/todos/:id", todoController.Update)
-		authenticated.DELETE("/todos/:id", todoController.Delete)
+		todos := authenticated.Group("/todos")
+		{
+			statuses := todos.Group("/statuses")
+			{
+				statuses.GET("/", todoStatusController.GetAll)
+				statuses.GET("/:id", todoStatusController.Show)
+				statuses.POST("", todoStatusController.Create)
+				statuses.PUT("/:id", todoStatusController.Update)
+				statuses.DELETE("/:id", todoStatusController.Delete)
+			}
 
-		authenticated.GET("/status", todoStatusController.GetAll)
-		authenticated.GET("/status/:id", todoStatusController.Show)
-		authenticated.POST("/status", todoStatusController.Create)
-		authenticated.PUT("/status/:id", todoStatusController.Update)
-		authenticated.DELETE("/status/:id", todoStatusController.Delete)
+			todos.GET("/", todoController.Index)
+			todos.GET("/:id", todoController.Show)
+			todos.POST("/", todoController.Create)
+			todos.PUT("/:id", todoController.Update)
+			todos.DELETE("/:id", todoController.Delete)
+		}
 	}
 
 	return r
