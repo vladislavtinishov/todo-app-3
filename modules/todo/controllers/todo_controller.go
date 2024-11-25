@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
-	"strconv"
 	todomodels "todo_app_3/modules/todo/models"
 	todoservices "todo_app_3/modules/todo/services"
 	"todo_app_3/utils"
@@ -74,12 +73,9 @@ func (td *TodoController) Create(c *gin.Context) {
 }
 
 func (td *TodoController) Show(c *gin.Context) {
-	id := c.Param("id")
-
-	idInt, err := strconv.Atoi(id)
-
+	id, err := utils.GetIdFromParam(c)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, "invalid id")
+		utils.ErrorEntityIdResponse(c)
 		return
 	}
 
@@ -89,7 +85,7 @@ func (td *TodoController) Show(c *gin.Context) {
 		return
 	}
 
-	todo, err := td.service.Find(uint(idInt), userId)
+	todo, err := td.service.Find(id, userId)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"error": "todo is not found",
@@ -103,12 +99,9 @@ func (td *TodoController) Show(c *gin.Context) {
 }
 
 func (td *TodoController) Update(c *gin.Context) {
-	id := c.Param("id")
-
-	idInt, err := strconv.Atoi(id)
-
+	id, err := utils.GetIdFromParam(c)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, "invalid id")
+		utils.ErrorEntityIdResponse(c)
 		return
 	}
 
@@ -124,7 +117,7 @@ func (td *TodoController) Update(c *gin.Context) {
 		return
 	}
 
-	todo, err := td.service.Update(uint(idInt), userId, body)
+	todo, err := td.service.Update(id, userId, body)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		utils.ErrorResponse(c, http.StatusUnauthorized, "todo is not found")
 		return
@@ -136,12 +129,9 @@ func (td *TodoController) Update(c *gin.Context) {
 }
 
 func (td *TodoController) Delete(c *gin.Context) {
-	id := c.Param("id")
-
-	idInt, err := strconv.Atoi(id)
-
+	id, err := utils.GetIdFromParam(c)
 	if err != nil {
-		utils.ErrorResponse(c, http.StatusBadRequest, "invalid id")
+		utils.ErrorEntityIdResponse(c)
 		return
 	}
 
@@ -151,7 +141,7 @@ func (td *TodoController) Delete(c *gin.Context) {
 		return
 	}
 
-	err = td.service.Delete(uint(idInt), userId)
+	err = td.service.Delete(id, userId)
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.JSON(http.StatusUnauthorized, gin.H{
