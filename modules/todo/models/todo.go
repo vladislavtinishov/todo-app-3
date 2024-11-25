@@ -3,6 +3,7 @@ package todomodels
 import (
 	"gorm.io/gorm"
 	"time"
+	statusmodels "todo_app_3/modules/todostatus/models"
 	usermodels "todo_app_3/modules/users/models"
 )
 
@@ -17,6 +18,7 @@ type Todo struct {
 	StatusID    uint           `json:"status_id"`
 	UserID      uint           `json:"-"`
 
-	User usermodels.User `gorm:"foreignKey:ID;references:UserID" json:"creator"`
-	Todo []Todo          `gorm:"foreignKey:ParentID;references:ID" json:"todos"`
+	User   usermodels.User         `gorm:"foreignKey:ID;references:UserID" json:"creator"`
+	Todo   []Todo                  `gorm:"foreignKey:ParentID;references:ID" json:"todos"`
+	Status statusmodels.TodoStatus `gorm:"foreignKey:ID;references:StatusID" json:"status"`
 }

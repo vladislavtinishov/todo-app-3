@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"todo_app_3/config"
 )
 
@@ -23,4 +24,16 @@ func GetUserId(c *gin.Context) (uint, error) {
 	}
 
 	return idInt, nil
+}
+
+func GetIdFromParam(c *gin.Context) (uint, error) {
+	id := c.Param("id")
+
+	intId, err := strconv.Atoi(id)
+
+	if err != nil {
+		return 0, err
+	}
+
+	return uint(intId), nil
 }

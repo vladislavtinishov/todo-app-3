@@ -7,6 +7,7 @@ import (
 	"os"
 	"todo_app_3/config/drivers"
 	todomodels "todo_app_3/modules/todo/models"
+	todostatusmodels "todo_app_3/modules/todostatus/models"
 	usermodels "todo_app_3/modules/users/models"
 )
 
@@ -34,5 +35,6 @@ func init() {
 
 func main() {
 	DB.AutoMigrate(usermodels.User{})
+	DB.AutoMigrate(todostatusmodels.TodoStatus{})
 	DB.AutoMigrate(todomodels.Todo{})
 }

@@ -16,7 +16,7 @@ func NewTodoService(db *gorm.DB) *TodoService {
 }
 
 func (s *TodoService) Create(body todomodels.Todo) (todomodels.Todo, error) {
-	result := s.db.Preload("User").Create(&body)
+	result := s.db.Preload("User").Preload("Status").Create(&body)
 
 	return body, result.Error
 }
@@ -24,7 +24,7 @@ func (s *TodoService) Create(body todomodels.Todo) (todomodels.Todo, error) {
 func (s *TodoService) Find(id, userId uint) (todomodels.Todo, error) {
 	var todo todomodels.Todo
 
-	result := s.db.Preload("Todo").Preload("User").First(&todo, "id = ? and user_id = ?", id, userId)
+	result := s.db.Preload("Todo").Preload("Status").Preload("User").First(&todo, "id = ? and user_id = ?", id, userId)
 
 	if result.Error != nil {
 		return todo, result.Error
