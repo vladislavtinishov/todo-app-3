@@ -67,9 +67,7 @@ func (td *TodoController) Create(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"todo": todo,
-	})
+	utils.SuccessResponse(c, todo)
 }
 
 func (td *TodoController) Show(c *gin.Context) {
@@ -93,9 +91,7 @@ func (td *TodoController) Show(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"todo": todo,
-	})
+	utils.SuccessResponse(c, todo)
 }
 
 func (td *TodoController) Update(c *gin.Context) {
@@ -123,9 +119,7 @@ func (td *TodoController) Update(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"todo": todo,
-	})
+	utils.SuccessResponse(c, todo)
 }
 
 func (td *TodoController) Delete(c *gin.Context) {
@@ -150,7 +144,7 @@ func (td *TodoController) Delete(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
+	utils.SuccessResponse(c, gin.H{
 		"result": true,
 	})
 }
