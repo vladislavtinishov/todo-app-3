@@ -60,7 +60,7 @@ func (s *TodoStatusService) Delete(userId, id uint) error {
 	var todo todostatusmodels.TodoStatus
 	var err error
 
-	if todo, err = s.Find(id, userId); err != nil {
+	if todo, err = s.Find(userId, id); err != nil {
 		return err
 	}
 
